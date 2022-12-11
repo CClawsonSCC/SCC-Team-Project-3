@@ -15,11 +15,14 @@ public:
 	// Memberfunction
 	virtual bool insert(const T&, string&);
 	string decode(string&);
+	string encode(string&);
 
 private:
+
 	virtual bool insert(BTNode<T>*& , const T& , string& );
 	string decode(BTNode<T>*& , string& );
 	char find_letter(BTNode<T>*& , string& );
+	bool encode_letter(BTNode<T>*&, const char, string&);
 };
 
 /** Insert character to tree.
@@ -76,6 +79,19 @@ string Morse_Tree<T>::decode(string& code) {
 }
 
 template<typename T>
+string Morse_Tree<T>::encode(string& input)
+{
+	string morse = "";
+	for (size_t i = 0; i < input.size(); i++)
+	{
+		encode_letter(this->root, input.at(i), morse);
+		morse += " ";
+	}
+	return morse;
+}
+
+
+template<typename T>
 string Morse_Tree<T>::decode(BTNode<T>*& local_root, string& code) {
 
 	string letter_code;
@@ -120,5 +136,23 @@ char Morse_Tree<T>::find_letter(BTNode<T>*& local_root, string& path) {
 	return 0;
 }
 
-#endif // !MORSE_H
+template<typename T>
+bool Morse_Tree<T>::encode_letter(BTNode<T>*& local_root, const char letter, string& morse)
+{
+	if (!local_root) { return false; }
+	if (local_root->data == letter) { return true; }
+	if (encode_letter(local_root->left, letter, morse))
+	{
+		morse += ".";
+		return true;
+	}
+	if (encode_letter(local_root->right, letter, morse))
+	{
+		morse += "_";
+		return true;
+	}
+	return false;
+}
 
+
+#endif // !MORSE_H

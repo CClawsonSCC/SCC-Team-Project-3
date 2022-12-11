@@ -21,6 +21,10 @@ int main()
 	cout << "Please enter a morse code message ( . and _ only, separate letters with spaces ): ";
 	getline(cin, code_message);
 	cout << endl << "The text for your Code Message is: " << tree.decode(code_message) << endl << endl;
+	
+	cout << "Please enter a word to encode (lowercase alphabet only): ";
+	getline(cin, code_message);
+	cout << endl << tree.encode(code_message) << endl << endl;
 
 	system("pause");
 	return 0;
