@@ -3,6 +3,7 @@
 
 #include "Binary_Tree.h"
 #include <fstream>
+#include <algorithm>
 
 using namespace std;
 
@@ -12,32 +13,42 @@ public:
 	// Constructor
 	Morse_Tree() : Binary_Tree<T>() {}
 
-	// Memberfunction
-	virtual bool insert(const T&, string&);
-	string decode(string&);
-	string encode(string&);
+	// Member functions
+	virtual bool insert(const T&, const string&);
+	string decode(const string&);
+	string encode(const string&);
 
 private:
 
-	virtual bool insert(BTNode<T>*& , const T& , string& );
-	string decode(BTNode<T>*& , string& );
-	char find_letter(BTNode<T>*& , string& );
+	// Member functions
+	virtual bool insert(BTNode<T>*&, const T&, const string&);
+	string decode(BTNode<T>*&, const string&);
+	char find_letter(BTNode<T>*&, string&);
 	bool encode_letter(BTNode<T>*&, const char, string&);
 };
 
+/* Member Functions */
+
 /** Insert character to tree.
-	@param item alhabet chracter
-	@param path: dot and dash code
+	@param item - Alhabet chracter.
+	@param path - Dot and dash code.
 	@return {true} when successful, {false} otherwise. 
 	*/
 template<typename T>
-bool Morse_Tree<T>::insert(const T& item, string& path) {
+bool Morse_Tree<T>::insert(const T& item, const string& path) {
 
 	return insert(this->root, item, path);
 }
 
+/**
+ * @brief Inserts a character into a binary tree to a node based on its morse code pattern.
+ * @param local_root - The current node in the morse code tree.
+ * @param item - The character to be inserted.
+ * @param path - Morse code string representing {item}.
+ * @return {true} if the character was inserted successfully, {false} otherwise.
+*/
 template<typename T>
-bool Morse_Tree<T>::insert(BTNode<T>*& local_root, const T& item, string& path) {
+bool Morse_Tree<T>::insert(BTNode<T>*& local_root, const T& item, const string& path) {
 
 	char travelkey;
 	int i;
@@ -69,17 +80,23 @@ bool Morse_Tree<T>::insert(BTNode<T>*& local_root, const T& item, string& path) 
 	}
 }
 
-/*Translate code into Alphabet.
-	@param code morse code that need to translate
-	@return the message which is in alphabet format. 
-	*/ 
+/**
+ * @brief Translates code into Alphabet.
+ * @param code - Morse code that need to translate.
+ * @return The message which is in alphabet format. 
+*/ 
 template<typename T>
-string Morse_Tree<T>::decode(string& code) {
+string Morse_Tree<T>::decode(const string& code) {
 	return decode(this->root, code);
 }
 
+/**
+ * @brief Translates a string into morse code.
+ * @param input - The string to me encoded.
+ * @return A morse code string.
+*/
 template<typename T>
-string Morse_Tree<T>::encode(string& input)
+string Morse_Tree<T>::encode(const string& input)
 {
 	string morse = "";
 	for (size_t i = 0; i < input.size(); i++)
@@ -87,12 +104,20 @@ string Morse_Tree<T>::encode(string& input)
 		encode_letter(this->root, input.at(i), morse);
 		morse += " ";
 	}
+	reverse(morse.begin(), morse.end());
 	return morse;
 }
 
+/* Private functions below. */
 
+/**
+ * @brief Decodes a morse code string into its alphabetic form.
+ * @param local_root - The current node in the morse code tree.
+ * @param code - The morse code string.
+ * @return the decoded word.
+*/
 template<typename T>
-string Morse_Tree<T>::decode(BTNode<T>*& local_root, string& code) {
+string Morse_Tree<T>::decode(BTNode<T>*& local_root, const string& code) {
 
 	string letter_code;
 	string message;
@@ -115,7 +140,12 @@ string Morse_Tree<T>::decode(BTNode<T>*& local_root, string& code) {
 	return message;
 }
 
-// Finds a letter in the tree based on a morse code path - Only called within decode()
+/**
+ * @brief Finds a letter in the tree based on a morse code path - Only called within decode().
+ * @param local_root - The current node in the tree.
+ * @param path - A morse code string that will direct the path to the letter.
+ * @return The letter the morse code represents.
+*/
 template<typename T>
 char Morse_Tree<T>::find_letter(BTNode<T>*& local_root, string& path) {
 
@@ -136,6 +166,13 @@ char Morse_Tree<T>::find_letter(BTNode<T>*& local_root, string& path) {
 	return 0;
 }
 
+/**
+ * @brief Creates a string of '.' and '_' characters to represent the morse code of a letter.
+ * @param local_root - The current node in the tree.
+ * @param letter - The letter to be encoded.
+ * @param morse - String of dots and dashes of the letter
+ * @return The morse string.
+*/
 template<typename T>
 bool Morse_Tree<T>::encode_letter(BTNode<T>*& local_root, const char letter, string& morse)
 {
@@ -153,6 +190,5 @@ bool Morse_Tree<T>::encode_letter(BTNode<T>*& local_root, const char letter, str
 	}
 	return false;
 }
-
 
 #endif // !MORSE_H
